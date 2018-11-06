@@ -1,0 +1,30 @@
+{
+    "name": "leonis/apikey-auth",
+    "description": "Laravel api key auth guard.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "leonis",
+            "email": "yangliulnn@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "~5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Leonis\\ApiKeyAuth\\": "src/"
+        },
+        "files": [
+            "src/helper.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Leonis\\ApiKeyAuth\\Providers\\ServiceProvider"
+            ]
+        }
+    }
+}
