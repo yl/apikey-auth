@@ -15,11 +15,11 @@ composer require leonis/apikey-auth
 1. 在 `config/app.php` 注册 ServiceProvider (Laravel 5.5 及以上无需手动注册)
 
     ```php
-           'providers' => [
-               // ...
-               Leonis\ApiKeyAuth\ApiKeyAuthServiceProvider::class,
-           ],
-           ```
+    'providers' => [
+        // ...
+        Leonis\ApiKeyAuth\Providers\ServiceProvider::class
+     ],
+     ```
 
 2. 创建配置文件：
 
@@ -38,7 +38,7 @@ composer require leonis/apikey-auth
 1. 在 `bootstrap/app.php` 注册 ServiceProvider
 
     ```php
-    $app->register(Leonis\ApiKeyAuth\ApiKeyAuthServiceProvider::class);
+    $app->register(Leonis\ApiKeyAuth\Providers\ServiceProvider::class);
     ```
 
 2. 复制配置和数据库迁移文件  
