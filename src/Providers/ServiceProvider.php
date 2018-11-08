@@ -25,11 +25,11 @@ class ServiceProvider extends IlluminateServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $path = realpath(__DIR__ . '/../../config/config.php');
-            $this->publishes([$path => config_path('api_key.php')], 'config');
+            $this->publishes([$path => base_path('config/api_key.php')], 'config');
             $this->mergeConfigFrom($path, 'api_key');
 
             $path = realpath(__DIR__ . '/../../database/migrations');
-            $this->publishes([$path => database_path('migrations')]);
+            $this->publishes([$path => base_path('database/migrations')]);
             $this->loadMigrationsFrom($path);
         }
 
