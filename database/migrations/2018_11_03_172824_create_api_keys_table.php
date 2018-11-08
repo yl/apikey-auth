@@ -22,7 +22,7 @@ class CreateApiKeysTable extends Migration
      */
     public function up()
     {
-        Schema::create('keys', function (Blueprint $table) {
+        Schema::create('api_keys', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->string('key')->unique();
@@ -38,6 +38,6 @@ class CreateApiKeysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('keys');
+        Schema::dropIfExists('api_keys');
     }
 }
