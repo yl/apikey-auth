@@ -11,8 +11,9 @@
 
 namespace Leonis\ApiKeyAuth\Providers;
 
+use Leonis\ApiKeyAuth\ApiKeyGuard;
 use Illuminate\Support\Facades\Auth;
-use \Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
+use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
 class ServiceProvider extends IlluminateServiceProvider
 {
