@@ -24,13 +24,15 @@ class ServiceProvider extends IlluminateServiceProvider
      */
     public function boot()
     {
-        $path = realpath(__DIR__ . '/../../config/config.php');
-        $this->publishes([$path => base_path('config/api_key.php')], 'config');
-        $this->mergeConfigFrom($path, 'api_key');
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../../config/config.php' => config_path('api_key.php'),
+            ], 'config');
 
-        $path = realpath(__DIR__ . '/../../database/migrations');
-        $this->publishes([$path => base_path('database/migrations')]);
-        $this->loadMigrationsFrom($path);
+            $this->publishes([
+                __DIR__.'/../../database/migrations' => database_path('migrations'),
+            ], 'migrations');
+        }
 
         $this->extendAuthGuard();
     }

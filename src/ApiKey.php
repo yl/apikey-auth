@@ -39,9 +39,9 @@ class ApiKey extends Model
      * @param \Illuminate\Database\Eloquent\Model $user
      * @return $this
      */
-    public function fromUser(Model $user)
+    public static function fromUser(Model $user)
     {
-        return $this->fromId($user->getKey());
+        return self::fromId($user->getKey());
     }
 
     /**
@@ -50,13 +50,14 @@ class ApiKey extends Model
      * @param $id
      * @return $this
      */
-    public function fromId($id)
+    public static function fromId($id)
     {
-        $this->user_id = $id;
-        $this->key = Str::random(config('key.key_length'));
-        $this->secret = Str::random(config('key.secret_length'));
-        $this->save();
+        $user = new static();
+        $user->user_id = $id;
+        $user->key = Str::random(config('api_key.key_length'));
+        $user->secret = Str::random(config('api_key.secret_length'));
+        $user->save();
 
-        return $this;
+        return $user;
     }
 }

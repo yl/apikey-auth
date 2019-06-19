@@ -68,8 +68,8 @@ composer require leonis/apikey-auth
 
 2. 为用户生成 Api Key :
     ```php
-    (new ApiKey)->fromUser(User::first());
-    (new ApiKey)->fromId($user->id);
+    ApiKey::fromUser(User::first());
+    ApiKey::fromId($user->id);
     ```
 
 3. 请求 API :

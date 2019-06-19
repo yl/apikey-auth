@@ -15,10 +15,7 @@
     "autoload": {
         "psr-4": {
             "Leonis\\ApiKeyAuth\\": "src/"
-        },
-        "files": [
-            "src/helper.php"
-        ]
+        }
     },
     "extra": {
         "laravel": {

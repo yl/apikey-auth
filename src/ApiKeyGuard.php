@@ -47,10 +47,9 @@ class ApiKeyGuard implements Guard
 
         $apiKey = $this->getApiKeyInstance();
         if (!$apiKey) {
-            throw new UnauthorizedHttpException(
-                'ApiKeyAuth',
-                'The api key is not exist.'
-            );
+            return response()->json([
+                'message' => 'The api key is not exist.',
+            ], 400);
         }
 
         $payloads = $this->getPayloads();
@@ -58,10 +57,9 @@ class ApiKeyGuard implements Guard
         $signature = $this->getSignature();
 
         if (!$this->checkSignature($payloads, $apiKey->secret, $signature)) {
-            throw new UnauthorizedHttpException(
-                'ApiKeyAuth',
-                'The signature is invalid.'
-            );
+            return response()->json([
+                'message' => 'The signature is invalid.',
+            ], 401);
         }
 
         $this->user = $this->provider->retrieveById($apiKey->user_id);
@@ -72,7 +70,7 @@ class ApiKeyGuard implements Guard
     /**
      * Validate a user's credentials.
      *
-     * @param  array $credentials
+     * @param array $credentials
      * @return bool
      */
     public function validate(array $credentials = [])
@@ -95,15 +93,23 @@ class ApiKeyGuard implements Guard
     /**
      * Get payloads from request.
      *
-     * @return array|false|string
+     * @return string
      */
     public function getPayloads()
     {
-        $payloads = $this->request->except('signature');
+        $request = $this->request->except('signature');
 
-        ksort($payloads, SORT_STRING);
+        ksort($request, SORT_STRING);
 
-        return json_encode($payloads);
+        $payloads = '';
+        foreach ($request as $key => $value) {
+            $payloads .= "$key=$value";
+            if (array_key_last($request) !== $key) {
+                $payloads .= '&';
+            }
+        }
+
+        return $payloads;
     }
 
     /**

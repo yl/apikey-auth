@@ -15,8 +15,8 @@ return [
 
     'algo' => 'SHA256',
 
-    'key_length' => 32,
+    'key_length' => 64,
 
-    'secret_length' => 32,
+    'secret_length' => 64,
 
 ];
