@@ -13,6 +13,7 @@ namespace Leonis\ApiKeyAuth\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Validator;
+use Leonis\ApiKeyAuth\Exceptions\ApiKeyAuthException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TimeDeviationMiddleware
@@ -21,24 +22,21 @@ class TimeDeviationMiddleware
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        $timestamp = $request->input('timestamp');
+        $timestamp  = $request->input('timestamp');
         $timeoffset = $request->input('timeoffset');
 
         if ($timestamp === null || $timeoffset === null) {
-            return response()->json([
-                'message' => 'Timestamp and timeoffset is required.',
-            ], 400);
+            throw new ApiKeyAuthException('Timestamp and timeoffset is required.', 400);
         }
 
         if (abs(time() - $timestamp) > $timeoffset) {
-            return response()->json([
-                'message' => 'Request has expired.',
-            ], 400);
+            throw new ApiKeyAuthException('Request has expired.', 400);
         }
 
         return $next($request);

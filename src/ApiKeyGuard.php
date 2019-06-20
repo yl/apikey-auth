@@ -15,6 +15,7 @@ use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
+use Leonis\ApiKeyAuth\Exceptions\ApiKeyAuthException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ApiKeyGuard implements Guard
@@ -31,7 +32,7 @@ class ApiKeyGuard implements Guard
     public function __construct(UserProvider $provider, Request $request)
     {
         $this->provider = $provider;
-        $this->request = $request;
+        $this->request  = $request;
     }
 
     /**
@@ -47,9 +48,7 @@ class ApiKeyGuard implements Guard
 
         $apiKey = $this->getApiKeyInstance();
         if (!$apiKey) {
-            return response()->json([
-                'message' => 'The api key is not exist.',
-            ], 400);
+            throw new ApiKeyAuthException('The api key is not exist.', 400);
         }
 
         $payloads = $this->getPayloads();
@@ -57,12 +56,14 @@ class ApiKeyGuard implements Guard
         $signature = $this->getSignature();
 
         if (!$this->checkSignature($payloads, $apiKey->secret, $signature)) {
-            return response()->json([
-                'message' => 'The signature is invalid.',
-            ], 401);
+            throw new ApiKeyAuthException('The signature is invalid.', 401);
         }
 
         $this->user = $this->provider->retrieveById($apiKey->user_id);
+
+        if (!$this->user) {
+            throw new ApiKeyAuthException('The api key is not exist.', 400);
+        }
 
         return $this->user;
     }
@@ -71,6 +72,7 @@ class ApiKeyGuard implements Guard
      * Validate a user's credentials.
      *
      * @param array $credentials
+     *
      * @return bool
      */
     public function validate(array $credentials = [])
@@ -128,6 +130,7 @@ class ApiKeyGuard implements Guard
      * @param string $payloads
      * @param string $secret
      * @param string $signature
+     *
      * @return bool
      */
     public function checkSignature($payloads, $secret, $signature)
